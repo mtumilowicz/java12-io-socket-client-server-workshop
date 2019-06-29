@@ -1,42 +1,34 @@
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class TestServerThreadPRequestSocket {
+public class TestServerThreadPRequestSocket extends Server {
 
-    public static void main(String args[]) throws IOException {
-        final int portNumber = 81;
-        System.out.println("Creating server socket on port " + portNumber);
-        ServerSocket serverSocket = new ServerSocket(portNumber);
-        while (true) {
-            Socket socket = serverSocket.accept();
-            System.out.println("Accepted connection from " + socket);
-            new Thread(() -> {
-                try {
-                    OutputStream os = socket.getOutputStream();
-                    PrintWriter pw = new PrintWriter(os, true);
-                    pw.println("What's you name?");
+    public static void main(String[] args) throws IOException {
+        new TestServerThreadPRequestSocket().start();
+    }
+    
+    @Override
+    void handle(Socket client) {
+        new Thread(() -> {
+            try (client) {
+                OutputStream os = client.getOutputStream();
+                PrintWriter pw = new PrintWriter(os, true);
+                pw.println("What's you name?");
 
-                    BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String str = br.readLine();
+                BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                String str = br.readLine();
 
-                    pw.println("Hello, " + str);
-                    pw.close();
-                    socket.close();
+                pw.println("Hello, " + str);
+                pw.close();
+                client.close();
 
-                    System.out.println("Just said hello to:" + str);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        socket.close();
-                    } catch (IOException ex) {
-                    }
-                }
-            }).start();
-        }
+                System.out.println("Just said hello to:" + str);
+            } catch (IOException ex) {
+                // workshops
+            }
+        }).start();
     }
 }
