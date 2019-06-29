@@ -14,6 +14,6 @@ public class ThreadPerRequestServer extends Server {
     
     @Override
     void handle(Socket client) {
-        new Thread(() -> ClientConnection.run(client)).start();
+        new Thread(() -> new ClientConnection(client).run()).start();
     }
 }

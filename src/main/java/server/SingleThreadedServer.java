@@ -14,6 +14,6 @@ public class SingleThreadedServer extends Server {
 
     @Override
     void handle(Socket client) {
-        ClientConnection.run(client);
+        new ClientConnection(client).run();
     }
 }
