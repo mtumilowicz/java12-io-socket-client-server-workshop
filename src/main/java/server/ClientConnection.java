@@ -9,10 +9,14 @@ import java.net.Socket;
  * Created by mtumilowicz on 2019-06-29.
  */
 class ClientConnection {
-    final Socket client;
+    private final Socket client;
+    private final PrintWriter writer;
+    private final BufferedReader reader;
 
-    ClientConnection(Socket client) {
+    ClientConnection(Socket client) throws IOException {
         this.client = client;
+        this.writer = new PrintWriter(client.getOutputStream(), true);
+        this.reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
     }
 
     void run() {
@@ -25,20 +29,10 @@ class ClientConnection {
     }
 
     private void sendLine(String message) {
-        Try<PrintWriter> pw = autoFlushablePrintWriter();
-        pw.onSuccess(writer -> writer.println(message));
+        writer.println(message);
     }
 
     private Try<String> readLine() {
-        return Try.withResources(() -> new BufferedReader(new InputStreamReader(client.getInputStream()))).of(
-                BufferedReader::readLine
-        );
-    }
-
-    private Try<PrintWriter> autoFlushablePrintWriter() {
-        return Try.withResources(() -> client).of(ignore -> {
-            OutputStream os = client.getOutputStream();
-            return new PrintWriter(os, true);
-        });
+        return Try.of(reader::readLine);
     }
 }
