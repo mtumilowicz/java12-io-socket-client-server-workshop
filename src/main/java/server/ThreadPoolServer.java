@@ -10,7 +10,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class TestServerThreadPoolSocket extends Server {
+public class ThreadPoolServer extends Server {
 
     private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(
             100,
@@ -22,7 +22,7 @@ public class TestServerThreadPoolSocket extends Server {
             });
 
     public static void main(String[] args) throws IOException {
-        new TestServerThreadPoolSocket().start();
+        new ThreadPoolServer().start();
     }
 
     @Override

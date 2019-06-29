@@ -6,14 +6,14 @@ import java.net.Socket;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class TestServerSocket extends Server {
+public class ThreadPerRequestServer extends Server {
 
     public static void main(String[] args) throws IOException {
-        new TestServerSocket().start();
+        new ThreadPerRequestServer().start();
     }
-
+    
     @Override
     void handle(Socket client) {
-        ClientConnection.run(client);
+        new Thread(() -> ClientConnection.run(client)).start();
     }
 }
