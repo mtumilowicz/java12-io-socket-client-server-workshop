@@ -18,10 +18,10 @@ abstract class Server {
         while (true) {
             try(final Socket client = serverSocket.accept()) {
                 System.out.println("Accepted connection from " + client);
-                handle(client);
+                handle(new ClientConnection(client));
             }
         }
     }
 
-    abstract void handle(Socket client);
+    abstract void handle(ClientConnection client);
 }

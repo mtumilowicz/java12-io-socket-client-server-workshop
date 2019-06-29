@@ -1,7 +1,6 @@
 package server;
 
-import java.io.*;
-import java.net.Socket;
+import java.io.IOException;
 
 /**
  * Created by mtumilowicz on 2019-06-23.
@@ -13,7 +12,7 @@ public class SingleThreadedServer extends Server {
     }
 
     @Override
-    void handle(Socket client) {
-        new ClientConnection(client).run();
+    void handle(ClientConnection clientConnection) {
+        clientConnection.run();
     }
 }

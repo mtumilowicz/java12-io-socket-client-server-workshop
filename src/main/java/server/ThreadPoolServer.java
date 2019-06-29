@@ -1,7 +1,6 @@
 package server;
 
-import java.io.*;
-import java.net.Socket;
+import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -26,8 +25,8 @@ public class ThreadPoolServer extends Server {
     }
 
     @Override
-    void handle(Socket client) {
-        executor.execute(() -> new ClientConnection(client).run());
+    void handle(ClientConnection clientConnection) {
+        executor.execute(clientConnection);
     }
 
 }
