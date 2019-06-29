@@ -1,8 +1,9 @@
 package server;
 
-import io.vavr.control.Try;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -21,19 +22,23 @@ class ClientConnection implements Runnable {
 
     @Override
     public void run() {
-        sendLine("What's you name?");
+        try (client) {
+            sendLine("What's you name?");
 
-        Try<String> str = readLine();
-        str.onSuccess(message -> sendLine("Hello, " + message));
+            String str = readLine();
+            sendLine("Hello, " + str);
 
-        System.out.println("Just said hello to:" + str);
+            System.out.println("Just said hello to:" + str);
+        } catch (IOException exception) {
+            // workshops
+        }
     }
 
     private void sendLine(String message) {
         writer.println(message);
     }
 
-    private Try<String> readLine() {
-        return Try.of(reader::readLine);
+    private String readLine() throws IOException {
+        return reader.readLine();
     }
 }
