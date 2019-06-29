@@ -10,19 +10,23 @@ import java.net.Socket;
  */
 class ClientConnection {
     static void run(Socket client) {
-        Try.withResources(() -> client).of(ignore -> {
-            Try<PrintWriter> pw = autoFlushablePrintWriter(client);
-            pw.onSuccess(writer -> writer.println("What's you name?"));
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            String str = br.readLine();
-
-            pw.onSuccess(writer -> writer.println("Hello, " + str));
-            pw.onSuccess(PrintWriter::close);
+            sendLine(client, "What's you name?");
+            
+            Try<String> str = readLine(client);
+            str.onSuccess(message -> sendLine(client, "Hello, " + message));
 
             System.out.println("Just said hello to:" + str);
-            return Void.class;
-        });
+    }
+    
+    static void sendLine(Socket client, String message) {
+        Try<PrintWriter> pw = autoFlushablePrintWriter(client);
+        pw.onSuccess(writer -> writer.println(message));
+    }
+
+    static Try<String> readLine(Socket client) {
+        return Try.withResources(() -> new BufferedReader(new InputStreamReader(client.getInputStream()))).of(
+                BufferedReader::readLine
+        );
     }
 
     static Try<PrintWriter> autoFlushablePrintWriter(Socket client) {
@@ -30,9 +34,5 @@ class ClientConnection {
             OutputStream os = client.getOutputStream();
             return new PrintWriter(os, true);
         });
-    }
-    
-    static Try<BufferedReader> readLine(Socket socket) {
-        return null;
     }
 }
