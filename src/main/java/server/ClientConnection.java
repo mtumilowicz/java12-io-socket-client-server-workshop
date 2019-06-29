@@ -6,7 +6,7 @@ import java.net.Socket;
 /**
  * Created by mtumilowicz on 2019-06-29.
  */
-public class ClientConnection {
+class ClientConnection {
     static void run(Socket client) {
         try(client) {
             OutputStream os = client.getOutputStream();
