@@ -5,7 +5,7 @@ import java.net.Socket;
 /**
  * Created by mtumilowicz on 2019-06-29.
  */
-abstract class HttpServer {
+abstract class Server {
     final int portNumber = 81;
 
     void start() throws IOException {
