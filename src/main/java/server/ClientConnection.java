@@ -22,7 +22,7 @@ class ClientConnection implements Runnable {
 
     @Override
     public void run() {
-        try (client) {
+        try (client; writer; reader) {
             sendLine("What's you name?");
 
             String str = readLine();
