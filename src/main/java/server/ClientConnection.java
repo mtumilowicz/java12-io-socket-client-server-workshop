@@ -8,7 +8,7 @@ import java.net.Socket;
 /**
  * Created by mtumilowicz on 2019-06-29.
  */
-class ClientConnection {
+class ClientConnection implements Runnable {
     private final Socket client;
     private final PrintWriter writer;
     private final BufferedReader reader;
@@ -19,7 +19,8 @@ class ClientConnection {
         this.reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
     }
 
-    void run() {
+    @Override
+    public void run() {
         sendLine("What's you name?");
 
         Try<String> str = readLine();
