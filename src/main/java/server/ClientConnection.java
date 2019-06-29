@@ -1,5 +1,7 @@
 package server;
 
+import io.vavr.control.Try;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -8,21 +10,29 @@ import java.net.Socket;
  */
 class ClientConnection {
     static void run(Socket client) {
-        try(client) {
-            OutputStream os = client.getOutputStream();
-            PrintWriter pw = new PrintWriter(os, true);
-            pw.println("What's you name?");
+        Try.withResources(() -> client).of(ignore -> {
+            Try<PrintWriter> pw = autoFlushablePrintWriter(client);
+            pw.onSuccess(writer -> writer.println("What's you name?"));
 
             BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
             String str = br.readLine();
 
-            pw.println("Hello, " + str);
-            pw.close();
-            client.close();
+            pw.onSuccess(writer -> writer.println("Hello, " + str));
+            pw.onSuccess(PrintWriter::close);
 
             System.out.println("Just said hello to:" + str);
-        } catch (IOException ex) {
-            // workshops
-        }
+            return Void.class;
+        });
+    }
+
+    static Try<PrintWriter> autoFlushablePrintWriter(Socket client) {
+        return Try.withResources(() -> client).of(ignore -> {
+            OutputStream os = client.getOutputStream();
+            return new PrintWriter(os, true);
+        });
+    }
+    
+    static Try<BufferedReader> readLine(Socket socket) {
+        return null;
     }
 }
