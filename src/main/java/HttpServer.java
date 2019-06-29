@@ -14,10 +14,12 @@ abstract class HttpServer {
         System.out.println("Created server socket on port " + portNumber);
 
         while (true) {
-            final Socket client = serverSocket.accept();
-            handle(new ClientConnection(client));
+            try(final Socket client = serverSocket.accept()) {
+                System.out.println("Accepted connection from " + client);
+                handle(client);
+            }
         }
     }
 
-    abstract void handle(ClientConnection clientConnection);
+    abstract void handle(Socket client);
 }

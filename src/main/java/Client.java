@@ -5,11 +5,11 @@ import java.util.Scanner;
 /**
  * Created by mtumilowicz on 2019-06-28.
  */
-public class ClientConnection {
+public class Client {
 
     Socket client;
 
-    public ClientConnection(Socket client) {
+    public Client(Socket client) {
         this.client = client;
     }
 
