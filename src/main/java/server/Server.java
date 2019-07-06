@@ -7,7 +7,7 @@ import java.net.ServerSocket;
  * Created by mtumilowicz on 2019-06-29.
  */
 abstract class Server {
-    final int portNumber = 81;
+    private final int portNumber = 81;
 
     void start() throws IOException {
         System.out.println("Creating server socket on port " + portNumber);
