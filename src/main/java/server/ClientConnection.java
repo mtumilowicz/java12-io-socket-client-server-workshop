@@ -25,10 +25,10 @@ class ClientConnection implements Runnable {
         try (client; writer; reader) {
             sendLine("What's you name?");
 
-            String str = readLine();
-            sendLine("Hello, " + str);
+            var name = readLine();
+            sendLine("Hello, " + name);
 
-            System.out.println("Just said hello to:" + str);
+            System.out.println("Just said hello to:" + name);
         } catch (IOException exception) {
             // workshops
         }
