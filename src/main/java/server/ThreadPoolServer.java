@@ -18,7 +18,8 @@ public class ThreadPoolServer extends Server {
             MILLISECONDS,
             new ArrayBlockingQueue<>(1000),
             (r, ex) -> {
-            });
+            }
+    );
 
     public static void main(String[] args) throws IOException {
         new ThreadPoolServer().start();
