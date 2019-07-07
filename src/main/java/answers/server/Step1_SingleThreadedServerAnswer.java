@@ -19,7 +19,7 @@ public class Step1_SingleThreadedServerAnswer {
 
     void start() throws IOException {
         log("Creating server socket on port " + portNumber);
-        ServerSocket serverSocket = new ServerSocket(portNumber);
+        var serverSocket = new ServerSocket(portNumber);
         log("Created server socket on port " + portNumber);
 
         while (true) {
