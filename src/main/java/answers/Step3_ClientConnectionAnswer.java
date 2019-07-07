@@ -1,4 +1,4 @@
-package answers.server;
+package answers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
