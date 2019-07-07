@@ -23,17 +23,20 @@ public class Step1_SingleThreadedServer {
         log("Created server socket on port " + portNumber);
 
         while (true) {
-            try (final var client = serverSocket.accept();
-                 final var writer = new PrintWriter(client.getOutputStream(), true);
-                 final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
+            try (final var client = serverSocket.accept()) {
                 log("Accepted connection from " + client);
 
-                writer.println("What's you name?");
+                try (final var writer = new PrintWriter(client.getOutputStream(), true);
+                     final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
+                    writer.println("What's you name?");
 
-                var name = reader.readLine();
-                writer.println("Hello, " + name);
+                    var name = reader.readLine();
+                    writer.println("Hello, " + name);
 
-                log("Just said hello to:" + name);
+                    log("Just said hello to:" + name);
+                } catch (IOException exception) {
+                    // workshops
+                }
             } catch (IOException exception) {
                 // workshops
             }
