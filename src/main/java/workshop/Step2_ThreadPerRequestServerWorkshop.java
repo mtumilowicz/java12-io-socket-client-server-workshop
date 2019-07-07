@@ -1,10 +1,6 @@
 package workshop;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 
 /**
  * Created by mtumilowicz on 2019-06-23.
@@ -17,32 +13,38 @@ public class Step2_ThreadPerRequestServerWorkshop {
         new Step2_ThreadPerRequestServerWorkshop().start();
     }
 
+    /**
+     * log message: "Creating server socket on port " + portNumber, hint: log
+     *
+     * create serverSocket, hint: new ServerSocket(portNumber)
+     *
+     * log message: "Created server socket on port " + portNumber, hint: log
+     *
+     * create never ending loop inside which we will accept connections
+     * hint: while(true), for(;;)
+     *
+     * accept client, hint: serverSocket.accept(), try-with-resources
+     *
+     * log "Accepted connection from " + client, hint: log
+     * 
+     * open new thread and perform below actions in that thread, hint: new Thread(() -> {...})
+     *
+     * create autoflushable PrintWriter from client outputStream
+     * hint: client.getOutputStream(), try-with-resources
+     *
+     * create BufferedReader from client inputStream
+     * hint: InputStreamReader, client.getInputStream(), try-with-resources
+     *
+     * push message to the client: "What's you name?", hint: writer.println
+     *
+     * receive message from the client with the name, hint: reader.readLine()
+     *
+     * push message to the client: "Hello, " + name, hint: writer.println
+     *
+     * log message: "Just said hello to:" + name, hint: log
+     */
     void start() throws IOException {
-        log("Creating server socket on port " + portNumber);
-        var serverSocket = new ServerSocket(portNumber);
-        log("Created server socket on port " + portNumber);
-
-        while (true) {
-            try (final var client = serverSocket.accept()) {
-                log("Accepted connection from " + client);
-                new Thread(() -> {
-                    try (final var writer = new PrintWriter(client.getOutputStream(), true);
-                         final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
-                        writer.println("What's you name?");
-
-                        var name = reader.readLine();
-                        writer.println("Hello, " + name);
-
-                        log("Just said hello to:" + name);
-                    } catch (IOException exception) {
-                        // workshops
-                    }
-                });
-            } catch (IOException exception) {
-                // workshops
-            }
-        }
-
+        
     }
 
     private void log(String message) {
