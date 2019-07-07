@@ -9,12 +9,12 @@ import java.net.Socket;
 /**
  * Created by mtumilowicz on 2019-07-07.
  */
-public class Step3_ClientConnection implements Runnable {
+public class Step3_ClientConnectionAnswer implements Runnable {
     private final Socket client;
     private final PrintWriter writer;
     private final BufferedReader reader;
 
-    Step3_ClientConnection(Socket client) throws IOException {
+    Step3_ClientConnectionAnswer(Socket client) throws IOException {
         this.client = client;
         this.writer = new PrintWriter(client.getOutputStream(), true);
         this.reader = new BufferedReader(new InputStreamReader(client.getInputStream()));

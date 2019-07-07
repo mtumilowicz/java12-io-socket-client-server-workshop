@@ -23,7 +23,7 @@ public class Step4_SingleThreadedServerAnswer {
             try (final var client = serverSocket.accept()) {
                 log("Accepted connection from " + client);
 
-                new Step3_ClientConnection(client);
+                new Step3_ClientConnectionAnswer(client);
             } catch (IOException exception) {
                 // workshops
             }
