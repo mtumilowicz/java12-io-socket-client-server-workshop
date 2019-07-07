@@ -9,7 +9,7 @@ import java.net.Socket;
 /**
  * Created by mtumilowicz on 2019-07-07.
  */
-public class Step3_ClientConnectionAnswer implements Runnable {
+class Step3_ClientConnectionAnswer implements Runnable {
     private final Socket client;
     private final PrintWriter writer;
     private final BufferedReader reader;

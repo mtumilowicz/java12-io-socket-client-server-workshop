@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class Step4_SingleThreadedServerAnswer {
+class Step4_SingleThreadedServerAnswer {
 
     final int portNumber = 81;
 

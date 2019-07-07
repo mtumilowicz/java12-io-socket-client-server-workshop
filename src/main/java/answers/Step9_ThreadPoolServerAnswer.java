@@ -9,7 +9,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class Step9_ThreadPoolServerAnswer extends Step6_ServerAnswer {
+class Step9_ThreadPoolServerAnswer extends Step6_ServerAnswer {
 
     private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(
             100,
