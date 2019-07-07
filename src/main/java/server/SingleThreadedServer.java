@@ -12,7 +12,7 @@ public class SingleThreadedServer extends Server {
     }
 
     @Override
-    void handle(ClientConnection clientConnection) {
+    void handle(Runnable clientConnection) {
         clientConnection.run();
     }
 }

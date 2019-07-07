@@ -25,7 +25,7 @@ public class ThreadPoolServer extends Server {
     }
 
     @Override
-    void handle(ClientConnection clientConnection) {
+    void handle(Runnable clientConnection) {
         executor.execute(clientConnection);
     }
 

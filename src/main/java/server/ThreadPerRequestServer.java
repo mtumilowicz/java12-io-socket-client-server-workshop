@@ -12,7 +12,7 @@ public class ThreadPerRequestServer extends Server {
     }
     
     @Override
-    void handle(ClientConnection clientConnection) {
+    void handle(Runnable clientConnection) {
         new Thread(clientConnection).start();
     }
 }

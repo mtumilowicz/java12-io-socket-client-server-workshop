@@ -26,5 +26,5 @@ abstract class Server {
         System.out.println(message);
     }
 
-    abstract void handle(ClientConnection client);
+    abstract void handle(Runnable clientConnection);
 }
