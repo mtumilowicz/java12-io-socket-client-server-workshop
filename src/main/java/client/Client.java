@@ -2,30 +2,27 @@ package client;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * Created by mtumilowicz on 2019-06-28.
  */
 public class Client {
 
-    Socket client;
-
-    public Client(Socket client) {
-        this.client = client;
+    public static void main(String[] args) throws IOException {
+        new Client().run();
     }
 
     public void run() throws IOException {
-        String hostname = "localhost";
-        int port = 81;
-        BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        System.out.println(br.readLine());
+        try (var client = new Socket("localhost", 81)) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            System.out.println(br.readLine());
 
-        OutputStream os = client.getOutputStream();
-        PrintWriter pw = new PrintWriter(os, true);
-        System.out.println("Type name...");
-        pw.println(new Scanner(System.in).nextLine());
+            OutputStream os = client.getOutputStream();
+            PrintWriter pw = new PrintWriter(os, true);
+            System.out.println("Type name...");
+            pw.println("XXX");
 
-        System.out.println(br.readLine());
+            System.out.println(br.readLine());
+        }
     }
 }
