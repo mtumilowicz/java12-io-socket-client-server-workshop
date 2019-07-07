@@ -22,7 +22,8 @@ class Step5_ThreadPerRequestServerWorkshop {
         while (true) {
             try (final var client = serverSocket.accept()) {
                 log("Accepted connection from " + client);
-                new Thread(new Step3_ClientConnectionWorkshop(client)).start();
+
+                // use Step3_ClientConnectionWorkshop, hint: new Thread(...).start()
             } catch (IOException exception) {
                 // workshops
             }

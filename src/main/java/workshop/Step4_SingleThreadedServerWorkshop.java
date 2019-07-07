@@ -23,7 +23,7 @@ class Step4_SingleThreadedServerWorkshop {
             try (final var client = serverSocket.accept()) {
                 log("Accepted connection from " + client);
 
-                new Step3_ClientConnectionWorkshop(client).run();
+                // use Step3_ClientConnectionWorkshop
             } catch (IOException exception) {
                 // workshops
             }
