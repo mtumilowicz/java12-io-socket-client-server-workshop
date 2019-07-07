@@ -9,12 +9,12 @@ import java.net.ServerSocket;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class Step1_SingleThreadedServer {
+public class Step1_SingleThreadedServerAnswer {
 
     final int portNumber = 81;
 
     public static void main(String[] args) throws IOException {
-        new Step1_SingleThreadedServer().start();
+        new Step1_SingleThreadedServerAnswer().start();
     }
 
     void start() throws IOException {
