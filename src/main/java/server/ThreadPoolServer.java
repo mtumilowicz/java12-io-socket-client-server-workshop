@@ -17,8 +17,7 @@ public class ThreadPoolServer extends Server {
             0L,
             MILLISECONDS,
             new ArrayBlockingQueue<>(1000),
-            (r, ex) -> {
-            }
+            new ThreadPoolExecutor.DiscardPolicy()
     );
 
     public static void main(String[] args) throws IOException {
