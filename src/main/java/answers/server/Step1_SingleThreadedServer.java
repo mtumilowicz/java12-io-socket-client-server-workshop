@@ -18,25 +18,29 @@ public class Step1_SingleThreadedServer {
     }
 
     void start() throws IOException {
-        System.out.println("Creating server socket on port " + portNumber);
+        log("Creating server socket on port " + portNumber);
         ServerSocket serverSocket = new ServerSocket(portNumber);
-        System.out.println("Created server socket on port " + portNumber);
+        log("Created server socket on port " + portNumber);
 
         while (true) {
             try (final var client = serverSocket.accept();
                  final var writer = new PrintWriter(client.getOutputStream(), true);
                  final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
-                System.out.println("Accepted connection from " + client);
+                log("Accepted connection from " + client);
 
                 writer.println("What's you name?");
 
                 var name = reader.readLine();
                 writer.println("Hello, " + name);
 
-                System.out.println("Just said hello to:" + name);
+                log("Just said hello to:" + name);
             } catch (IOException exception) {
                 // workshops
             }
         }
+    }
+
+    private void log(String message) {
+        System.out.println(message);
     }
 }
