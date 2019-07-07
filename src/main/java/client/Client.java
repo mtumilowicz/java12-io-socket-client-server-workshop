@@ -13,7 +13,9 @@ public class Client {
     }
 
     public void run() throws IOException {
+        System.out.println("Client: creating socket...");
         try (var client = new Socket("localhost", 81)) {
+            System.out.println("Client: socket created...");
             BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
             System.out.println(br.readLine());
 
