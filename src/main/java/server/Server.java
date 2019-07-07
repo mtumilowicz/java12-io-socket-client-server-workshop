@@ -10,16 +10,20 @@ abstract class Server {
     private final int portNumber = 81;
 
     void start() throws IOException {
-        System.out.println("Creating server socket on port " + portNumber);
+        log("Creating server socket on port " + portNumber);
         var serverSocket = new ServerSocket(portNumber);
-        System.out.println("Created server socket on port " + portNumber);
+        log("Created server socket on port " + portNumber);
 
         while (true) {
             try(final var client = serverSocket.accept()) {
-                System.out.println("Accepted connection from " + client);
+                log("Accepted connection from " + client);
                 handle(new ClientConnection(client));
             }
         }
+    }
+    
+    private void log(String message) {
+        System.out.println(message);
     }
 
     abstract void handle(ClientConnection client);
