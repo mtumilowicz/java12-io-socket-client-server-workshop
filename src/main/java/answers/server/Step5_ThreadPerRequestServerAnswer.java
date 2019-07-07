@@ -22,7 +22,7 @@ public class Step5_ThreadPerRequestServerAnswer {
         while (true) {
             try (final var client = serverSocket.accept()) {
                 log("Accepted connection from " + client);
-                new Thread(new Step3_ClientConnectionAnswer(client));
+                new Thread(new Step3_ClientConnectionAnswer(client)).start();
             } catch (IOException exception) {
                 // workshops
             }
