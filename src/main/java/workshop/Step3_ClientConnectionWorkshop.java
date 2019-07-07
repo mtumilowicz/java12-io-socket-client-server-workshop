@@ -1,47 +1,24 @@
 package workshop;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-
 /**
  * Created by mtumilowicz on 2019-07-07.
  */
+
+/**
+ * encapsulate common code from {@link Step1_SingleThreadedServerWorkshop}, {@link Step2_ThreadPerRequestServerWorkshop}
+ * 
+ * 3 fields: Socket client, PrintWriter writer, BufferedReader reader
+ * 
+ * 2 private util methods: sendLine, readLine
+ * hint: sendLine - writer.println(message), readLine - reader.readLine()
+ */
 class Step3_ClientConnectionWorkshop implements Runnable {
-    private final Socket client;
-    private final PrintWriter writer;
-    private final BufferedReader reader;
-
-    Step3_ClientConnectionWorkshop(Socket client) throws IOException {
-        this.client = client;
-        this.writer = new PrintWriter(client.getOutputStream(), true);
-        this.reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-    }
-
+    
     @Override
     public void run() {
-        try (client; writer; reader) {
-            sendLine("What's you name?");
-
-            var name = readLine();
-            sendLine("Hello, " + name);
-
-            log("Just said hello to:" + name);
-        } catch (IOException exception) {
-            // workshops
-        }
+        // hint: start with try-with-resources for client, writer and reader
     }
-
-    private void sendLine(String message) {
-        writer.println(message);
-    }
-
-    private String readLine() throws IOException {
-        return reader.readLine();
-    }
-
+    
     private void log(String message) {
         System.out.println(message);
     }
