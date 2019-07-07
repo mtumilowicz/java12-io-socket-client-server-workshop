@@ -28,7 +28,7 @@ class ClientConnection implements Runnable {
             var name = readLine();
             sendLine("Hello, " + name);
 
-            System.out.println("Just said hello to:" + name);
+            log("Just said hello to:" + name);
         } catch (IOException exception) {
             // workshops
         }
@@ -40,5 +40,9 @@ class ClientConnection implements Runnable {
 
     private String readLine() throws IOException {
         return reader.readLine();
+    }
+
+    private void log(String message) {
+        System.out.println(message);
     }
 }
