@@ -4,6 +4,9 @@ package workshop;
  * Created by mtumilowicz on 2019-07-07.
  */
 
+import java.io.IOException;
+import java.net.Socket;
+
 /**
  * encapsulate common code from {@link Step1_SingleThreadedServerWorkshop}, {@link Step2_ThreadPerRequestServerWorkshop}
  * 
@@ -13,6 +16,10 @@ package workshop;
  * hint: sendLine - writer.println(message), readLine - reader.readLine()
  */
 class Step3_ClientConnectionWorkshop implements Runnable {
+
+    Step3_ClientConnectionWorkshop(Socket client) throws IOException {
+        
+    }
     
     @Override
     public void run() {
