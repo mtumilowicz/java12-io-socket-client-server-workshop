@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class Step1_SingleThreadedServerWorkshop {
+class Step1_SingleThreadedServerWorkshop {
 
     final int portNumber = 81;
 

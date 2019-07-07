@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-public class Step2_ThreadPerRequestServerWorkshop {
+class Step2_ThreadPerRequestServerWorkshop {
 
     final int portNumber = 81;
 
