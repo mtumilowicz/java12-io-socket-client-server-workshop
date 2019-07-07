@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'groovy'
 }
 
 group 'java12-io-socket-client-server-workshop'
@@ -8,11 +9,16 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 12
 targetCompatibility = 12
 
+test {
+    exclude '**/workshop*'
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     compile group: 'io.vavr', name: 'vavr', version: '0.10.0'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.7'
+    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.5'
 }
