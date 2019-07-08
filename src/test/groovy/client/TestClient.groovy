@@ -3,8 +3,14 @@ package client
  * Created by mtumilowicz on 2019-07-08.
  */
 class TestClient {
+    private final int port
+
+    TestClient(int port) {
+        this.port = port
+    }
+
     def run() throws IOException {
-        new Socket('localhost', 81).withCloseable { client ->
+        new Socket('localhost', port).withCloseable { client ->
             def br = new BufferedReader(new InputStreamReader(client.getInputStream()))
 
             def list = []
