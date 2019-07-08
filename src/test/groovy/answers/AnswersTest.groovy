@@ -72,7 +72,6 @@ class AnswersTest extends Specification {
         t.start()
         Thread.sleep(10)
         def output = new TestClient(port).run()
-        t.interrupt()
         
         output
     }

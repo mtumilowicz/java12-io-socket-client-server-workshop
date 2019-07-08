@@ -23,7 +23,7 @@ abstract class Step6_ServerAnswer {
         var serverSocket = new ServerSocket(portNumber);
         log("Created server socket on port " + portNumber);
 
-        while (!Thread.currentThread().isInterrupted()) {
+        while (true) {
             final var client = serverSocket.accept();
             log("Accepted connection from " + client);
             

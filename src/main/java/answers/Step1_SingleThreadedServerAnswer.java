@@ -30,7 +30,7 @@ class Step1_SingleThreadedServerAnswer {
         var serverSocket = new ServerSocket(portNumber);
         log("Created server socket on port " + portNumber);
 
-        while (!Thread.currentThread().isInterrupted()) {
+        while (true) {
             final var client = serverSocket.accept();
             log("Accepted connection from " + client);
 
