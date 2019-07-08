@@ -68,8 +68,7 @@ class AnswersTest extends Specification {
     }
 
     def extractClientOutputFor(port, server) {
-        def t = new Thread({ server.start() })
-        t.start()
+        new Thread({ server.start() }).start()
         Thread.sleep(10)
         new TestClient(port).run()
     }
