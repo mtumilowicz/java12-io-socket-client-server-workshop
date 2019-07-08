@@ -1,22 +1,11 @@
-package answers
-
-import client.TestClient
-import spock.lang.Specification
-
+package answers 
 /**
  * Created by mtumilowicz on 2019-07-08.
  */
-class Step1_SingleThreadedServerAnswerTest extends Specification {
-    
-    def server = new Step1_SingleThreadedServerAnswer()
+class Step1_SingleThreadedServerAnswerTest extends ServerTest {
 
-    def "check communication with test client"() {
-        when:
-        new Thread({ server.start() }).start()
-        Thread.sleep(10)
-        def output = new TestClient().run()
-
-        then:
-        output == ["received: What's you name?", "send: Michal", "received: Hello, Michal"]
+    @Override
+    def getServer() {
+        new Step1_SingleThreadedServerAnswer()
     }
 }
