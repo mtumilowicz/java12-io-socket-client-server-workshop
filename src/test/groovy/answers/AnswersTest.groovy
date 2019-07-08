@@ -26,31 +26,46 @@ class AnswersTest extends Specification {
         expect:
         expectedClientOutput == extractClientOutputFor(port, new Step2_ThreadPerRequestServerAnswer(port))
     }
-//
-//    def "Step4_SingleThreadedServerAnswer"() {
-//        expect:
-//        expectedClientOutput == extractClientOutputFor(new Step4_SingleThreadedServerAnswer())
-//    }
-//
-//    def "Step5_ThreadPerRequestServerAnswer"() {
-//        expect:
-//        expectedClientOutput == extractClientOutputFor(new Step5_ThreadPerRequestServerAnswer())
-//    }
-//
-//    def "Step7_SingleThreadedServerAnswer"() {
-//        expect:
-//        expectedClientOutput == extractClientOutputFor(new Step7_SingleThreadedServerAnswer())
-//    }
-//
-//    def "Step8_ThreadPerRequestServerAnswer"() {
-//        expect:
-//        expectedClientOutput == extractClientOutputFor(new Step8_ThreadPerRequestServerAnswer())
-//    }
-//
-//    def "Step9_ThreadPoolServerAnswer"() {
-//        expect:
-//        expectedClientOutput == extractClientOutputFor(new Step9_ThreadPoolServerAnswer())
-//    }
+
+    def "Step4_SingleThreadedServerAnswer"() {
+        given:
+        def port = 3
+        
+        expect:
+        expectedClientOutput == extractClientOutputFor(port, new Step4_SingleThreadedServerAnswer(port))
+    }
+
+    def "Step5_ThreadPerRequestServerAnswer"() {
+        given:
+        def port = 5
+
+        expect:
+        expectedClientOutput == extractClientOutputFor(port, new Step5_ThreadPerRequestServerAnswer(port))
+    }
+
+    def "Step7_SingleThreadedServerAnswer"() {
+        given:
+        def port = 7
+
+        expect:
+        expectedClientOutput == extractClientOutputFor(port, new Step7_SingleThreadedServerAnswer(port))
+    }
+
+    def "Step8_ThreadPerRequestServerAnswer"() {
+        given:
+        def port = 8
+
+        expect:
+        expectedClientOutput == extractClientOutputFor(port, new Step8_ThreadPerRequestServerAnswer(port))
+    }
+
+    def "Step9_ThreadPoolServerAnswer"() {
+        given:
+        def port = 9
+
+        expect:
+        expectedClientOutput == extractClientOutputFor(port, new Step9_ThreadPoolServerAnswer(port))
+    }
 
     def extractClientOutputFor(port, server) {
         def t = new Thread({ server.start() })
