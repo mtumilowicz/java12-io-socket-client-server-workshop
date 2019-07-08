@@ -23,7 +23,7 @@ class Step3_ClientConnectionWorkshop implements Runnable {
     
     @Override
     public void run() {
-        // hint: start with try-with-resources for client, writer and reader
+        // hint: start with try-with-resources for client
     }
     
     private void log(String message) {
