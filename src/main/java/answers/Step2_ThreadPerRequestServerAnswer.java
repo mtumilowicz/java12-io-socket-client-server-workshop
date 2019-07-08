@@ -11,7 +11,15 @@ import java.net.ServerSocket;
  */
 class Step2_ThreadPerRequestServerAnswer {
 
-    final int portNumber = 81;
+    private final int portNumber;
+
+    Step2_ThreadPerRequestServerAnswer(int portNumber) {
+        this.portNumber = portNumber;
+    }
+
+    Step2_ThreadPerRequestServerAnswer() {
+        this.portNumber = 81;
+    }
 
     public static void main(String[] args) throws IOException {
         new Step2_ThreadPerRequestServerAnswer().start();
@@ -22,25 +30,23 @@ class Step2_ThreadPerRequestServerAnswer {
         var serverSocket = new ServerSocket(portNumber);
         log("Created server socket on port " + portNumber);
 
-        while (true) {
-            try (final var client = serverSocket.accept()) {
-                log("Accepted connection from " + client);
-                new Thread(() -> {
-                    try (final var writer = new PrintWriter(client.getOutputStream(), true);
-                         final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
-                        writer.println("What's you name?");
+        while (!Thread.currentThread().isInterrupted()) {
+            final var client = serverSocket.accept();
+            log("Accepted connection from " + client);
+            new Thread(() -> {
+                try (client) {
+                    final var writer = new PrintWriter(client.getOutputStream(), true);
+                    final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    writer.println("What's you name?");
 
-                        var name = reader.readLine();
-                        writer.println("Hello, " + name);
+                    var name = reader.readLine();
+                    writer.println("Hello, " + name);
 
-                        log("Just said hello to:" + name);
-                    } catch (IOException exception) {
-                        // workshops
-                    }
-                });
-            } catch (IOException exception) {
-                // workshops
-            }
+                    log("Just said hello to:" + name);
+                } catch (Exception ex) {
+                    log(ex.getMessage());
+                }
+            }).start();
         }
 
     }

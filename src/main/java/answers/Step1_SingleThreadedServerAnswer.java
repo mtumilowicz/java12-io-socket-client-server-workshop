@@ -11,7 +11,15 @@ import java.net.ServerSocket;
  */
 class Step1_SingleThreadedServerAnswer {
 
-    final int portNumber = 81;
+    private final int portNumber;
+
+    Step1_SingleThreadedServerAnswer(int portNumber) {
+        this.portNumber = portNumber;
+    }
+
+    Step1_SingleThreadedServerAnswer() {
+        this.portNumber = 81;
+    }
 
     public static void main(String[] args) throws IOException {
         new Step1_SingleThreadedServerAnswer().start();
@@ -22,7 +30,7 @@ class Step1_SingleThreadedServerAnswer {
         var serverSocket = new ServerSocket(portNumber);
         log("Created server socket on port " + portNumber);
 
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try (final var client = serverSocket.accept()) {
                 log("Accepted connection from " + client);
 
