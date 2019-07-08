@@ -24,10 +24,10 @@ class Step3_ClientConnectionAnswer implements Runnable {
     public void run() {
         try (client) {
             sendLine("What's you name?");
-
+            
             var name = readLine();
             sendLine("Hello, " + name);
-
+            
             log("Just said hello to:" + name);
         } catch (IOException exception) {
             // workshops

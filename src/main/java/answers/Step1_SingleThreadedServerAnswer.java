@@ -31,24 +31,23 @@ class Step1_SingleThreadedServerAnswer {
         log("Created server socket on port " + portNumber);
 
         while (!Thread.currentThread().isInterrupted()) {
-            try (final var client = serverSocket.accept()) {
-                log("Accepted connection from " + client);
+            final var client = serverSocket.accept();
+            log("Accepted connection from " + client);
 
-                try (final var writer = new PrintWriter(client.getOutputStream(), true);
-                     final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
-                    writer.println("What's you name?");
+            try (client) {
+                final var writer = new PrintWriter(client.getOutputStream(), true);
+                final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                writer.println("What's you name?");
 
-                    var name = reader.readLine();
-                    writer.println("Hello, " + name);
+                var name = reader.readLine();
+                writer.println("Hello, " + name);
 
-                    log("Just said hello to:" + name);
-                } catch (IOException exception) {
-                    // workshops
-                }
+                log("Just said hello to:" + name);
             } catch (IOException exception) {
                 // workshops
             }
         }
+
     }
 
     private void log(String message) {

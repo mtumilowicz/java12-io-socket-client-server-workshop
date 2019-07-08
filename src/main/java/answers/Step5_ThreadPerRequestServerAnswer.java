@@ -8,7 +8,15 @@ import java.net.ServerSocket;
  */
 class Step5_ThreadPerRequestServerAnswer {
 
-    final int portNumber = 81;
+    private final int portNumber;
+
+    Step5_ThreadPerRequestServerAnswer(int portNumber) {
+        this.portNumber = portNumber;
+    }
+
+    private Step5_ThreadPerRequestServerAnswer() {
+        this.portNumber = 81;
+    }
 
     public static void main(String[] args) throws IOException {
         new Step5_ThreadPerRequestServerAnswer().start();
@@ -19,13 +27,11 @@ class Step5_ThreadPerRequestServerAnswer {
         var serverSocket = new ServerSocket(portNumber);
         log("Created server socket on port " + portNumber);
 
-        while (true) {
-            try (final var client = serverSocket.accept()) {
-                log("Accepted connection from " + client);
-                new Thread(new Step3_ClientConnectionAnswer(client)).start();
-            } catch (IOException exception) {
-                // workshops
-            }
+        while (!Thread.currentThread().isInterrupted()) {
+            final var client = serverSocket.accept();
+            log("Accepted connection from " + client);
+            
+            new Thread(new Step3_ClientConnectionAnswer(client)).start();
         }
 
     }

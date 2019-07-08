@@ -11,6 +11,13 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 class Step9_ThreadPoolServerAnswer extends Step6_ServerAnswer {
 
+    public Step9_ThreadPoolServerAnswer(int portNumber) {
+        super(portNumber);
+    }
+
+    private Step9_ThreadPoolServerAnswer() {
+    }
+
     private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(
             100,
             100,
