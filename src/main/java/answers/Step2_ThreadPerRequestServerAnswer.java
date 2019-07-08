@@ -17,7 +17,7 @@ class Step2_ThreadPerRequestServerAnswer {
         this.portNumber = portNumber;
     }
 
-    Step2_ThreadPerRequestServerAnswer() {
+    private Step2_ThreadPerRequestServerAnswer() {
         this.portNumber = 81;
     }
 

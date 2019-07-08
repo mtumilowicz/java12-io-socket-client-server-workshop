@@ -17,7 +17,7 @@ class Step1_SingleThreadedServerAnswer {
         this.portNumber = portNumber;
     }
 
-    Step1_SingleThreadedServerAnswer() {
+    private Step1_SingleThreadedServerAnswer() {
         this.portNumber = 81;
     }
 
