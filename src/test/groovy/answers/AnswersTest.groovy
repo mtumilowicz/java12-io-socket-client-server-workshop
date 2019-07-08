@@ -71,8 +71,6 @@ class AnswersTest extends Specification {
         def t = new Thread({ server.start() })
         t.start()
         Thread.sleep(10)
-        def output = new TestClient(port).run()
-        
-        output
+        new TestClient(port).run()
     }
 }
