@@ -4,7 +4,7 @@ _Reference_: https://www.amazon.com/Reactive-Programming-RxJava-Asynchronous-App
 _Reference_: https://www.amazon.com/Netty-Action-Norman-Maurer/dp/1617291471  
 _Reference_: https://docs.oracle.com/javase/tutorial/networking/sockets/index.html
 _Reference_: https://stackoverflow.com/questions/28480575/whats-the-difference-between-websocket-and-plain-socket-communication
-* https://papweb.wordpress.com/2010/10/30/understanding-tomcat-executor-thread-pooling/
+* https://developerlife.com/2011/04/13/creating-asynchronous-servlets-with-tomcat-7-servlet-3-0-api/
 
 * low-level network communication
 * client-server application
