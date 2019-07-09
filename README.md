@@ -100,3 +100,6 @@ ports or anything like that
   reaches several hundred or a few thousand, the application begins to misbehave; for
   example, it begins responding slowly due to frequent garbage collection cycles and
   context switching.
+  
+* tomcat: The standard executor internally uses a java.util.concurrent.ThreadPoolExecutor
+    * http://tomcat.apache.org/tomcat-9.0-doc/config/executor.html
