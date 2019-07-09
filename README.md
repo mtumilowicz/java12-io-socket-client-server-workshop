@@ -3,8 +3,7 @@
 _Reference_: https://www.amazon.com/Reactive-Programming-RxJava-Asynchronous-Applications/dp/1491931655  
 _Reference_: https://www.amazon.com/Netty-Action-Norman-Maurer/dp/1617291471  
 _Reference_: https://docs.oracle.com/javase/tutorial/networking/sockets/index.html
-
-* https://stackoverflow.com/questions/28480575/whats-the-difference-between-websocket-and-plain-socket-communication
+_Reference_: https://stackoverflow.com/questions/28480575/whats-the-difference-between-websocket-and-plain-socket-communication
 * https://papweb.wordpress.com/2010/10/30/understanding-tomcat-executor-thread-pooling/
 
 * low-level network communication
@@ -54,3 +53,20 @@ client/server socket connection
 reach the web server for normal web communication, then you can reach it for a webSocket request without any 
 networking infrastructure anywhere between client and server having to open new holes in the firewall or open new 
 ports or anything like that
+
+* This value (the
+  default is 50) caps the maximum number of pending connections that can wait in a
+  queue. Above that number, they are rejected. To make matters worse, we pretend to
+  implement HTTP/1.1 which uses persistent connections by default. Until the client
+  disconnects we keep the TCP/IP connection open just in case, blocking new clients.
+* also uses a thread per
+  connection, but threads are recycled when a client disconnects so that we do not pay
+  the price of thread warm up for every client
+  * This is pretty much how all popular
+    servlet containers like Tomcat and Jetty work, managing 100 to 200 threads in a pool
+    by default. Tomcat has the so-called NIO connector that handles some of the operations
+    on sockets asynchronously, but the real work in servlets and frameworks built
+    on top of them is still blocking.
+  * This means that traditional applications are inherently
+    limited to a couple thousand connections, even built on top of modern servlet
+    containers.
