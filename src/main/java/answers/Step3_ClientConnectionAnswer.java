@@ -23,7 +23,7 @@ class Step3_ClientConnectionAnswer implements Runnable {
     @Override
     public void run() {
         try (client) {
-            sendLine("What's you name?");
+            sendLine("What's your name?");
             
             var name = readLine();
             sendLine("Hello, " + name);

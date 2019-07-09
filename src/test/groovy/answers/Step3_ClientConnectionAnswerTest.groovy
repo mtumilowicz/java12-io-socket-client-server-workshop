@@ -1,26 +1,24 @@
 package answers
 
-import spock.lang.Specification
-
+import spock.lang.Specification 
 /**
  * Created by mtumilowicz on 2019-07-08.
  */
 class Step3_ClientConnectionAnswerTest extends Specification {
-    def "draft"() {
+    def "test communication"() {
         given:
-        PipedOutputStream oStream = new PipedOutputStream()
-        PipedInputStream iStream = new PipedInputStream(oStream)
-        
+        def outputStream = new ByteArrayOutputStream()
+        def inputStream = new ByteArrayInputStream("Michal".bytes)
+
         def socket = Mock(Socket) {
-            getOutputStream() >> oStream
-            getInputStream() >> iStream
+            getOutputStream() >> outputStream
+            getInputStream() >> inputStream
         }
-        
+
         when:
-        oStream.write("XXX ".bytes)
         new Step3_ClientConnectionAnswer(socket).run()
-        
+
         then:
-        iStream.newReader().readLine() == "Hello, XXX What's you name?"
+        outputStream.toString() == "What's your name?\r\nHello, Michal\r\n"
     }
 }
