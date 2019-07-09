@@ -9,7 +9,7 @@ import spock.lang.Specification
  */
 class AnswersTest extends Specification {
 
-    def expectedClientOutput = ["received: What's you name?", "send: Michal", "received: Hello, Michal"]
+    def expectedClientOutput = ["received: What's your name?", "send: Michal", "received: Hello, Michal"]
 
     def "Step1_SingleThreadedServerAnswer"() {
         given:

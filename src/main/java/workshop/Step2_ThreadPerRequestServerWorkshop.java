@@ -7,7 +7,15 @@ import java.io.IOException;
  */
 class Step2_ThreadPerRequestServerWorkshop {
 
-    final int portNumber = 81;
+    private final int portNumber;
+
+    Step2_ThreadPerRequestServerWorkshop(int portNumber) {
+        this.portNumber = portNumber;
+    }
+
+    private Step2_ThreadPerRequestServerWorkshop() {
+        this.portNumber = 81;
+    }
 
     public static void main(String[] args) throws IOException {
         new Step2_ThreadPerRequestServerWorkshop().start();
@@ -23,19 +31,20 @@ class Step2_ThreadPerRequestServerWorkshop {
      * create never ending loop inside which we will accept connections
      * hint: while(true), for(;;)
      *
-     * accept client, hint: serverSocket.accept(), try-with-resources
+     * accept client, hint: serverSocket.accept()
      *
      * log "Accepted connection from " + client, hint: log
      * 
      * open new thread and perform below actions in that thread, hint: new Thread(() -> {...})
      *
+     * try-with-resources for client for client
      * create autoflushable PrintWriter from client outputStream
-     * hint: client.getOutputStream(), try-with-resources
+     * hint: client.getOutputStream()
      *
      * create BufferedReader from client inputStream
-     * hint: InputStreamReader, client.getInputStream(), try-with-resources
+     * hint: InputStreamReader, client.getInputStream()
      *
-     * push message to the client: "What's you name?", hint: writer.println
+     * push message to the client: "What's your name?", hint: writer.println
      *
      * receive message from the client with the name, hint: reader.readLine()
      *

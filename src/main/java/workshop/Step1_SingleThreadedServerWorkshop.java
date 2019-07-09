@@ -37,11 +37,12 @@ class Step1_SingleThreadedServerWorkshop {
      *
      * try-with-resources for client
      * create autoflushable PrintWriter from client outputStream
+     * hint: client.getOutputStream()
      *
      * create BufferedReader from client inputStream
      * hint: InputStreamReader, client.getInputStream()
      *
-     * push message to the client: "What's you name?", hint: writer.println
+     * push message to the client: "What's your name?", hint: writer.println
      *
      * receive message from the client with the name, hint: reader.readLine()
      *

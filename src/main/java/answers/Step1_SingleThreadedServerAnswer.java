@@ -37,7 +37,7 @@ class Step1_SingleThreadedServerAnswer {
             try (client) {
                 final var writer = new PrintWriter(client.getOutputStream(), true);
                 final var reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                writer.println("What's you name?");
+                writer.println("What's your name?");
 
                 var name = reader.readLine();
                 writer.println("Hello, " + name);
