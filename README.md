@@ -70,3 +70,33 @@ ports or anything like that
   * This means that traditional applications are inherently
     limited to a couple thousand connections, even built on top of modern servlet
     containers.
+    
+* On 64 bit JVM 1.8, each
+  thread consumes 1,024 KB of RAM by default (see -Xss flag). A thousand concurrent
+  connections, even idle, mean 1,000 threads and about 1 GB of stack space. Now, do
+  not be confused, stack space is independent from heap space, so your application will
+  consume far more than this a gigabyte
+  
+* A thread pool has many advantages over simply creating
+  threads on demand:
+  * Thread is already initialized and started, therefore you do not have to wait or
+  warm up, reducing client latency.
+  * We put a sharp limit on the total number of threads running in our system so
+  that we can safely reject connections under peak load rather than crashing.
+  * A thread pool has a configurable queue that can temporarily hold short peaks of
+  load.
+  * If both the pool and queue are saturated, there is also a configurable rejection
+  policy (error, running in client thread instead, etc.).
+  
+* Servlet 3.0 specification made it possible to write scalable applications on top of asynchronous
+  servlets. The idea is to decouple the processing request from the container
+  thread. Whenever the application wants to send the response, it can do it from any
+  thread at any point in time. The original container thread that picked up the request
+  might be already gone or it might be handling some other request. This is a revolutionary
+  idea; however, the rest of the application must be built this way. Otherwise,
+  the application is more responsive (the container thread pool is almost never saturated),
+  but if there is another user thread that must process that request, we just shifted
+  the problem of thread explosion into a different place. When the number of threads
+  reaches several hundred or a few thousand, the application begins to misbehave; for
+  example, it begins responding slowly due to frequent garbage collection cycles and
+  context switching.
