@@ -47,3 +47,10 @@ client/server socket connection
   * The accept method waits until a client starts up and requests a connection on the host and port of this server
   *  When a connection is requested and successfully established, the accept method returns a new Socket object which 
   is bound to the same local port and has its remote address and remote port set to that of the client
+* webSockets and regular sockets are not the same thing
+* a webSocket runs over a regular socket
+* The biggest difference right away is that ALL webSocket connections start with an HTTP request from client to server
+* The fact that a webSocket connection starts with an HTTP connection is critically important because if you can 
+reach the web server for normal web communication, then you can reach it for a webSocket request without any 
+networking infrastructure anywhere between client and server having to open new holes in the firewall or open new 
+ports or anything like that
