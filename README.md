@@ -35,3 +35,15 @@ must arrive on the client side in the same order in which the server sent it)
     and port of the client
     * it needs a new socket so that it can continue to listen to the original socket for connection requests while 
     tending to the needs of the connected client
+* public synchronized void close() throws IOException
+    ```
+    * <p> Closing this socket will also close the socket's
+    * {@link java.io.InputStream InputStream} and
+    * {@link java.io.OutputStream OutputStream}.
+    ```
+* ServerSocket is a java.net class that provides a system-independent implementation of the server side of a 
+client/server socket connection
+* clientSocket = serverSocket.accept();
+  * The accept method waits until a client starts up and requests a connection on the host and port of this server
+  *  When a connection is requested and successfully established, the accept method returns a new Socket object which 
+  is bound to the same local port and has its remote address and remote port set to that of the client
