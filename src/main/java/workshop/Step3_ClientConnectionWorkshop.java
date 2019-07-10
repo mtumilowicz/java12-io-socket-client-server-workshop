@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * encapsulate common code from {@link Step1_SingleThreadedServerWorkshop}, {@link Step2_ThreadPerRequestServerWorkshop}
+ * encapsulate common code from {@link Step1_SingleThreadedServerWorkshop}, {@link Step2_ThreadPerConnectionServerWorkshop}
  * 
  * 3 fields: Socket client, PrintWriter writer, BufferedReader reader
  * 

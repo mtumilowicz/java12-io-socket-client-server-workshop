@@ -5,20 +5,20 @@ import java.io.IOException;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-class Step2_ThreadPerRequestServerWorkshop {
+class Step2_ThreadPerConnectionServerWorkshop {
 
     private final int portNumber;
 
-    Step2_ThreadPerRequestServerWorkshop(int portNumber) {
+    Step2_ThreadPerConnectionServerWorkshop(int portNumber) {
         this.portNumber = portNumber;
     }
 
-    private Step2_ThreadPerRequestServerWorkshop() {
+    private Step2_ThreadPerConnectionServerWorkshop() {
         this.portNumber = 81;
     }
 
     public static void main(String[] args) throws IOException {
-        new Step2_ThreadPerRequestServerWorkshop().start();
+        new Step2_ThreadPerConnectionServerWorkshop().start();
     }
 
     /**

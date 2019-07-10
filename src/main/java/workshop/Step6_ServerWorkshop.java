@@ -19,7 +19,7 @@ abstract class Step6_ServerWorkshop {
 
     /**
      * move all common code of start() methods in {@link Step4_SingleThreadedServerWorkshop}, 
-     * {@link Step5_ThreadPerRequestServerWorkshop}
+     * {@link Step5_ThreadPerConnectionServerWorkshop}
      * 
      * abstract single point of difference into abstract method
      */

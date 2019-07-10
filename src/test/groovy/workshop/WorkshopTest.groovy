@@ -17,12 +17,12 @@ class WorkshopTest extends Specification {
         expectedClientOutput == extractClientOutputFor(port, new Step1_SingleThreadedServerWorkshop(port))
     }
 
-    def "Step2_ThreadPerRequestServerWorkshop"() {
+    def "Step2_ThreadPerConnectionServerWorkshop"() {
         given:
         def port = 2
 
         expect:
-        expectedClientOutput == extractClientOutputFor(port, new Step2_ThreadPerRequestServerWorkshop(port))
+        expectedClientOutput == extractClientOutputFor(port, new Step2_ThreadPerConnectionServerWorkshop(port))
     }
 
     def "Step4_SingleThreadedServerWorkshop"() {
@@ -33,12 +33,12 @@ class WorkshopTest extends Specification {
         expectedClientOutput == extractClientOutputFor(port, new Step4_SingleThreadedServerWorkshop(port))
     }
 
-    def "Step5_ThreadPerRequestServerWorkshop"() {
+    def "Step5_ThreadPerConnectionServerWorkshop"() {
         given:
         def port = 5
 
         expect:
-        expectedClientOutput == extractClientOutputFor(port, new Step5_ThreadPerRequestServerWorkshop(port))
+        expectedClientOutput == extractClientOutputFor(port, new Step5_ThreadPerConnectionServerWorkshop(port))
     }
 
     def "Step7_SingleThreadedServerWorkshop"() {
@@ -49,12 +49,12 @@ class WorkshopTest extends Specification {
         expectedClientOutput == extractClientOutputFor(port, new Step7_SingleThreadedServerWorkshop(port))
     }
 
-    def "Step8_ThreadPerRequestServerWorkshop"() {
+    def "Step8_ThreadPerConnectionServerWorkshop"() {
         given:
         def port = 8
 
         expect:
-        expectedClientOutput == extractClientOutputFor(port, new Step8_ThreadPerRequestServerWorkshop(port))
+        expectedClientOutput == extractClientOutputFor(port, new Step8_ThreadPerConnectionServerWorkshop(port))
     }
 
     def "Step9_ThreadPoolServerWorkshop"() {

@@ -19,12 +19,12 @@ class AnswersTest extends Specification {
         expectedClientOutput == extractClientOutputFor(port, new Step1_SingleThreadedServerAnswer(port))
     }
 
-    def "Step2_ThreadPerRequestServerAnswer"() {
+    def "Step2_ThreadPerConnectionServerAnswer"() {
         given:
         def port = 2
 
         expect:
-        expectedClientOutput == extractClientOutputFor(port, new Step2_ThreadPerRequestServerAnswer(port))
+        expectedClientOutput == extractClientOutputFor(port, new Step2_ThreadPerConnectionServerAnswer(port))
     }
 
     def "Step4_SingleThreadedServerAnswer"() {
@@ -35,12 +35,12 @@ class AnswersTest extends Specification {
         expectedClientOutput == extractClientOutputFor(port, new Step4_SingleThreadedServerAnswer(port))
     }
 
-    def "Step5_ThreadPerRequestServerAnswer"() {
+    def "Step5_ThreadPerConnectionServerAnswer"() {
         given:
         def port = 5
 
         expect:
-        expectedClientOutput == extractClientOutputFor(port, new Step5_ThreadPerRequestServerAnswer(port))
+        expectedClientOutput == extractClientOutputFor(port, new Step5_ThreadPerConnectionServerAnswer(port))
     }
 
     def "Step7_SingleThreadedServerAnswer"() {
@@ -51,12 +51,12 @@ class AnswersTest extends Specification {
         expectedClientOutput == extractClientOutputFor(port, new Step7_SingleThreadedServerAnswer(port))
     }
 
-    def "Step8_ThreadPerRequestServerAnswer"() {
+    def "Step8_ThreadPerConnectionServerAnswer"() {
         given:
         def port = 8
 
         expect:
-        expectedClientOutput == extractClientOutputFor(port, new Step8_ThreadPerRequestServerAnswer(port))
+        expectedClientOutput == extractClientOutputFor(port, new Step8_ThreadPerConnectionServerAnswer(port))
     }
 
     def "Step9_ThreadPoolServerAnswer"() {

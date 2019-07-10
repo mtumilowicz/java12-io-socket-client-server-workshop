@@ -6,20 +6,20 @@ import java.net.ServerSocket;
 /**
  * Created by mtumilowicz on 2019-06-23.
  */
-class Step5_ThreadPerRequestServerAnswer {
+class Step5_ThreadPerConnectionServerAnswer {
 
     private final int portNumber;
 
-    Step5_ThreadPerRequestServerAnswer(int portNumber) {
+    Step5_ThreadPerConnectionServerAnswer(int portNumber) {
         this.portNumber = portNumber;
     }
 
-    private Step5_ThreadPerRequestServerAnswer() {
+    private Step5_ThreadPerConnectionServerAnswer() {
         this.portNumber = 81;
     }
 
     public static void main(String[] args) throws IOException {
-        new Step5_ThreadPerRequestServerAnswer().start();
+        new Step5_ThreadPerConnectionServerAnswer().start();
     }
 
     void start() throws IOException {
