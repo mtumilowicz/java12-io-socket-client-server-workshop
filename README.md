@@ -77,7 +77,34 @@ dropped and it must arrive on the client side in the same order in which the ser
   * we just shifted the problem of thread explosion into a different place
   * application could begin responding slowly due to frequent garbage collection cycles and
   context switching.
-  
+* example:
+    * tomcat: 100 thread for processing requests + 100 container threads (business logic)
+    * netty: 4 threads in event loop + 100 container threads (business logic)
+* A major improvement in the HTTP 1.1 standard is persistent connections
+    * In HTTP 1.0, a connection between a Web client and server is closed after a single request/response cycle. 
+    In HTTP 1.1, a connection is kept alive and reused for multiple requests
+    * Persistent connections reduce communication lag perceptibly, because the client doesn't need to
+     renegotiate the TCP connection after each request
+    * thread per HTTP connection, which is based on HTTP 1.1's persistent connections, is a common solution vendors 
+    have adopted
+    * Under this strategy, each HTTP connection between client and server is associated with one thread on the server side
+    * Threads are allocated from a server-managed thread pool. Once a connection is closed, the dedicated thread is recycled back to the pool and is ready to serve other tasks
+    * Depending on the hardware configuration, this approach can scale to a high number of concurrent connections
+    * threads are relatively expensive in terms of memory use
+    * Servers configured with a fixed number of threads can suffer the thread starvation problem, whereby requests from new clients are rejected once all the threads in the pool are taken
+    * for many Web sites, users request pages from the server only sporadically. This is known as a page-by-page model. The connection threads are idling most of the time, which is a waste of resources
+    * Thanks to the non-blocking I/O capability introduced in Java 4's New I/O APIs for the Java Platform (NIO) package, a persistent HTTP connection doesn't require that a thread be constantly attached to it
+    * Threads can be allocated to connections only when requests are being processed
+    * When a connection is idle between requests, the thread can be recycled, and the connection is placed in a centralized NIO select set to detect new requests without consuming a separate thread
+    * This model, called **thread per request**, potentially allows Web servers to handle a growing number of user connections with a fixed number of threads
+    * Users of Ajax applications interact with the Web server much more frequently than in the page-by-page model
+    * Unlike ordinary user requests, Ajax requests can be sent frequently by one client to the server. In addition, both the client and scripts running on the client side can poll the Web server regularly for updates
+    * More simultaneous requests cause more threads to be consumed, which cancels out the benefit of the thread-per-request approach to a high degree
+    * Some slow-running back-end routines worsen the situation. For example, a request could be blocked by a depleted JDBC connection pool, or a low-throughput Web service endpoint
+    * Until the resource becomes available, the thread could be stuck with the pending request for a long time. It would be better to place the request in a centralized queue waiting for available resources and recycle that thread
+    *  This effectively throttles the number of request threads to match the capacity of the slow-running back-end routines
+    * It also suggests that at a certain point during request processing (when the request is stored in the queue), no threads are consumed for the request at all
+    * Asynchronous support in Servlet 3.0 is designed to achieve this scenario through a universal and portable approach
 # conclusions in a nutshell
 * `Socket` - client side of the connection
 * `ServerSocket` - server side of the connection
@@ -110,6 +137,8 @@ client/server socket connection
       and remote port set to that of the client when a connection is successfully established 
 * `Step9_ThreadPoolServerAnswer` - uses a thread per connection, but threads are recycled when a client 
 disconnects (no thread warm up for every client)
+    * tomcat: The standard executor internally uses a `java.util.concurrent.ThreadPoolExecutor`
+        * http://tomcat.apache.org/tomcat-9.0-doc/config/executor.html
 * this is pretty much how servlet containers like Tomcat work, managing 200 threads in a pool
   by default. 
   * note that Tomcat has the so-called NIO connector that handles some of the operations
@@ -118,34 +147,6 @@ disconnects (no thread warm up for every client)
   * this means that traditional applications are inherently
     limited to a couple thousand connections, even built on top of modern servlet
     containers
-* tomcat: The standard executor internally uses a java.util.concurrent.ThreadPoolExecutor
-    * http://tomcat.apache.org/tomcat-9.0-doc/config/executor.html
-    
-* A major improvement in the HTTP 1.1 standard is persistent connections
-    * In HTTP 1.0, a connection between a Web client and server is closed after a single request/response cycle. 
-    In HTTP 1.1, a connection is kept alive and reused for multiple requests
-    * Persistent connections reduce communication lag perceptibly, because the client doesn't need to
-     renegotiate the TCP connection after each request
-    * thread per HTTP connection, which is based on HTTP 1.1's persistent connections, is a common solution vendors 
-    have adopted
-    * Under this strategy, each HTTP connection between client and server is associated with one thread on the server side
-    * Threads are allocated from a server-managed thread pool. Once a connection is closed, the dedicated thread is recycled back to the pool and is ready to serve other tasks
-    * Depending on the hardware configuration, this approach can scale to a high number of concurrent connections
-    * threads are relatively expensive in terms of memory use
-    * Servers configured with a fixed number of threads can suffer the thread starvation problem, whereby requests from new clients are rejected once all the threads in the pool are taken
-    * for many Web sites, users request pages from the server only sporadically. This is known as a page-by-page model. The connection threads are idling most of the time, which is a waste of resources
-    * Thanks to the non-blocking I/O capability introduced in Java 4's New I/O APIs for the Java Platform (NIO) package, a persistent HTTP connection doesn't require that a thread be constantly attached to it
-    * Threads can be allocated to connections only when requests are being processed
-    * When a connection is idle between requests, the thread can be recycled, and the connection is placed in a centralized NIO select set to detect new requests without consuming a separate thread
-    * This model, called **thread per request**, potentially allows Web servers to handle a growing number of user connections with a fixed number of threads
-    * Users of Ajax applications interact with the Web server much more frequently than in the page-by-page model
-    * Unlike ordinary user requests, Ajax requests can be sent frequently by one client to the server. In addition, both the client and scripts running on the client side can poll the Web server regularly for updates
-    * More simultaneous requests cause more threads to be consumed, which cancels out the benefit of the thread-per-request approach to a high degree
-    * Some slow-running back-end routines worsen the situation. For example, a request could be blocked by a depleted JDBC connection pool, or a low-throughput Web service endpoint
-    * Until the resource becomes available, the thread could be stuck with the pending request for a long time. It would be better to place the request in a centralized queue waiting for available resources and recycle that thread
-    *  This effectively throttles the number of request threads to match the capacity of the slow-running back-end routines
-    * It also suggests that at a certain point during request processing (when the request is stored in the queue), no threads are consumed for the request at all
-    * Asynchronous support in Servlet 3.0 is designed to achieve this scenario through a universal and portable approach
     
 * There are two common scenarios in which a thread associated with a request can be sitting idle.
     * The thread needs to wait for a resource to become available or process data before building the response. For example, an application may need to query a database or access data from a remote web service before generating the response.
@@ -171,6 +172,3 @@ disconnects (no thread warm up for every client)
     * Asynchronous servlets solve this problem by letting this thread that was engaged to handle the request go back to a pool, while the long running task is executing in some other thread
     * Once the task has completed and results are ready, then the servlet container has to be notified that the results are ready, and then another thread will be allocated to handle sending this result back to the client
     * Now, when this happens, the client is still connected to the server and is still waiting
-    
-* tomcat: 100 wątków przetwarzania żądań + 100 wątków na logikę biznesową
-* netty: 4 wątki na event loop + 100 wątków na logikę biznesową
