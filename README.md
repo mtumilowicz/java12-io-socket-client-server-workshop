@@ -6,8 +6,8 @@ _Reference_: https://docs.oracle.com/javase/tutorial/networking/sockets/index.ht
 _Reference_: https://stackoverflow.com/questions/28480575/whats-the-difference-between-websocket-and-plain-socket-communication  
 _Reference_: https://www.javaworld.com/article/2077995/java-concurrency-asynchronous-processing-support-in-servlet-3-0.html  
 _Reference_: https://docs.oracle.com/javaee/7/tutorial/servlets012.htm  
-_Reference_: https://www.hackerearth.com/practice/notes/asynchronous-servlets-in-java/
-* https://developerlife.com/2011/04/13/creating-asynchronous-servlets-with-tomcat-7-servlet-3-0-api/
+_Reference_: https://www.hackerearth.com/practice/notes/asynchronous-servlets-in-java/  
+_Reference_: https://developerlife.com/2011/04/13/creating-asynchronous-servlets-with-tomcat-7-servlet-3-0-api/
 
 * low-level network communication
 * client-server application
