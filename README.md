@@ -54,7 +54,30 @@ dropped and it must arrive on the client side in the same order in which the ser
     reach the web server for normal web communication, then you can reach it for a webSocket request without any 
     networking infrastructure anywhere between client and server having to open new holes in the firewall or open new 
     ports or anything like that
-
+* on 64 bit JVM 1.8 thread consumes 1,024 KB of RAM by default (-Xss flag)
+    * 1000 concurrent connections mean 1,000 threads and about 1 GB of stack space
+    * stack space is independent from heap space - application will consume far more than this a gigabyte
+* A thread pool has many advantages over simply creating
+  threads on demand:
+  * thread is already initialized and started, therefore you do not have to wait or
+  warm up, reducing client latency
+  * we put a sharp limit on the total number of threads running in our system so
+  that we can safely reject connections under peak load rather than crashing
+  * a thread pool has a configurable queue that can temporarily hold short peaks of
+  load
+  * if both the pool and queue are saturated, there is also a configurable rejection
+  policy (error, running in client thread instead, etc.)
+* servlet 3.0 specification made it possible to write asynchronous servlets
+  * the idea is to decouple the processing request from the container
+  thread
+  * whenever the application wants to send the response, it can do it from any
+  thread at any point in time
+  * the original container thread that picked up the request might be already gone or it might be 
+  handling some other request
+  * we just shifted the problem of thread explosion into a different place
+  * application could begin responding slowly due to frequent garbage collection cycles and
+  context switching.
+  
 # conclusions in a nutshell
 * `Socket` - client side of the connection
 * `ServerSocket` - server side of the connection
@@ -67,58 +90,34 @@ dropped and it must arrive on the client side in the same order in which the ser
     ```
 * `ServerSocket` is a `java.net` class that provides a system-independent implementation of the server side of a 
 client/server socket connection
-* `serverSocket.accept()`
-  * waits until a client starts up and requests a connection on the host and port of this server
-  * returns a new `Socket` which is bound to the same local port and has its remote address 
-  and remote port set to that of the client when a connection is successfully established 
-
-* This value (the
-  default is 50) caps the maximum number of pending connections that can wait in a
-  queue. Above that number, they are rejected. To make matters worse, we pretend to
-  implement HTTP/1.1 which uses persistent connections by default. Until the client
-  disconnects we keep the TCP/IP connection open just in case, blocking new clients.
-* also uses a thread per
-  connection, but threads are recycled when a client disconnects so that we do not pay
-  the price of thread warm up for every client
-  * This is pretty much how all popular
-    servlet containers like Tomcat and Jetty work, managing 100 to 200 threads in a pool
-    by default. Tomcat has the so-called NIO connector that handles some of the operations
+    * useful constructors
+        ```
+        public ServerSocket(int port) throws IOException {
+            this(port, 50, null);
+        }
+        ```
+        ```
+        public ServerSocket(int port, int backlog) throws IOException {
+            this(port, backlog, null);
+        }
+        ```
+        * backlog (the default is 50) requested maxim
+            * note that HTTP/1.1 uses persistent connections by default and until the client
+          disconnects we keep the TCP/IP connection open - blocking any new clients
+    * `serverSocket.accept()`
+      * waits until a client starts up and requests a connection on the host and port of this server
+      * returns a new `Socket` which is bound to the same local port and has its remote address 
+      and remote port set to that of the client when a connection is successfully established 
+* `Step9_ThreadPoolServerAnswer` - uses a thread per connection, but threads are recycled when a client 
+disconnects (no thread warm up for every client)
+* this is pretty much how servlet containers like Tomcat work, managing 200 threads in a pool
+  by default. 
+  * note that Tomcat has the so-called NIO connector that handles some of the operations
     on sockets asynchronously, but the real work in servlets and frameworks built
-    on top of them is still blocking.
-  * This means that traditional applications are inherently
+    on top of them is still blocking
+  * this means that traditional applications are inherently
     limited to a couple thousand connections, even built on top of modern servlet
-    containers.
-    
-* On 64 bit JVM 1.8, each
-  thread consumes 1,024 KB of RAM by default (see -Xss flag). A thousand concurrent
-  connections, even idle, mean 1,000 threads and about 1 GB of stack space. Now, do
-  not be confused, stack space is independent from heap space, so your application will
-  consume far more than this a gigabyte
-  
-* A thread pool has many advantages over simply creating
-  threads on demand:
-  * Thread is already initialized and started, therefore you do not have to wait or
-  warm up, reducing client latency.
-  * We put a sharp limit on the total number of threads running in our system so
-  that we can safely reject connections under peak load rather than crashing.
-  * A thread pool has a configurable queue that can temporarily hold short peaks of
-  load.
-  * If both the pool and queue are saturated, there is also a configurable rejection
-  policy (error, running in client thread instead, etc.).
-  
-* Servlet 3.0 specification made it possible to write scalable applications on top of asynchronous
-  servlets. The idea is to decouple the processing request from the container
-  thread. Whenever the application wants to send the response, it can do it from any
-  thread at any point in time. The original container thread that picked up the request
-  might be already gone or it might be handling some other request. This is a revolutionary
-  idea; however, the rest of the application must be built this way. Otherwise,
-  the application is more responsive (the container thread pool is almost never saturated),
-  but if there is another user thread that must process that request, we just shifted
-  the problem of thread explosion into a different place. When the number of threads
-  reaches several hundred or a few thousand, the application begins to misbehave; for
-  example, it begins responding slowly due to frequent garbage collection cycles and
-  context switching.
-  
+    containers
 * tomcat: The standard executor internally uses a java.util.concurrent.ThreadPoolExecutor
     * http://tomcat.apache.org/tomcat-9.0-doc/config/executor.html
     
