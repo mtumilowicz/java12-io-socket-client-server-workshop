@@ -76,7 +76,20 @@ dropped and it must arrive on the client side in the same order in which the ser
   handling some other request
   * we just shifted the problem of thread explosion into a different place
   * application could begin responding slowly due to frequent garbage collection cycles and
-  context switching.
+  context switching
+  * There are two common scenarios in which a thread associated with a request can be sitting idle.
+  * The thread needs to wait for a resource to become available or process data before building the 
+  response. For example, an application may need to query a database or access data from a remote web 
+  service before generating the response.
+  * The thread needs to wait for an event before generating the response. For example, an application 
+  may have to wait for a JMS message, new information from another client, or new data available in a 
+  queue before generating the response.
+  * Asynchronous processing refers to assigning these blocking operations to a new thread and retuning 
+  the thread associated with the request immediately to the container
+  * although most of the processing has nothing to do with the servlet request or response
+  * this can leads to Thread Starvation – Since our servlet thread is blocked until all the processing is done, 
+  if server gets a lot of requests to process, it will hit the maximum servlet thread limit and further requests 
+  will get Connection Refused errors
 * example:
     * tomcat: 100 thread for processing requests + 100 container threads (business logic)
     * netty: 4 threads in event loop + 100 container threads (business logic)
@@ -105,6 +118,22 @@ dropped and it must arrive on the client side in the same order in which the ser
     *  This effectively throttles the number of request threads to match the capacity of the slow-running back-end routines
     * It also suggests that at a certain point during request processing (when the request is stored in the queue), no threads are consumed for the request at all
     * Asynchronous support in Servlet 3.0 is designed to achieve this scenario through a universal and portable approach
+* In short, an asynchronous servlet enables an application to process incoming requests in an asynchronous fashion: A given HTTP worker thread handles an incoming request and then passes the request to another background thread which in turn will be responsible for processing the request and send the response back to the client. The initial HTTP worker thread will return to the HTTP thread pool as soon as it passes the request to the background thread, so it becomes available to process another request.
+* This approach by itself may solve the problem of HTTP thread pool exhaustion, but will not solve the problem of system resources consumption.
+* After all, another background thread was created for processing the request, so the number of simultaneous active threads will not decrease and the system resource consumption will not be improved
+* container's HTTP thread pool size to 2
+* As one may expect, as soon as we fire a considerable number of requests against the servlet endpoint we will leave the container completely unresponsive
+* The two existing HTTP threads will block in Thread.sleep() for each incoming request and will only proceed to the next one after that period of time has gone through
+*  The result is that this time our server will not become unresponsive when we fire a considerable number of requests against the servlet endpoint. The 2 existing HTTP worker threads will handle the requests and spawn a background thread that will continue to process the requests. The HTTP threads will immediately return to the HTTP thread pool and handle the next request in the same asynchronous fashion
+* We have solved the problem of the HTTP thread pool exhaustion, but the number of required threads to handle the requests has not improved: we are just spawning background threads to handle the requests
+* In terms of simultaneous running thread count this should be equivalent to simply increase the HTTP thread pool size: under heavy load the system will not scale
+
+* With synchronous servlets, a thread handling the client HTTP request would be tied up for the entire duration of time it takes to process the request
+    * For long running tasks, where the server primarily waits around for a response (from somewhere else), this leads to thread starvation, under heavy load
+    * This is due to the fact that even though the server isn’t doing anything but waiting around, the threads are being consumed by lots of requests as they come in (and threads are a finite resource)
+    * Asynchronous servlets solve this problem by letting this thread that was engaged to handle the request go back to a pool, while the long running task is executing in some other thread
+    * Once the task has completed and results are ready, then the servlet container has to be notified that the results are ready, and then another thread will be allocated to handle sending this result back to the client
+    * Now, when this happens, the client is still connected to the server and is still waiting
 # conclusions in a nutshell
 * `Socket` - client side of the connection
 * `ServerSocket` - server side of the connection
@@ -147,28 +176,3 @@ disconnects (no thread warm up for every client)
   * this means that traditional applications are inherently
     limited to a couple thousand connections, even built on top of modern servlet
     containers
-    
-* There are two common scenarios in which a thread associated with a request can be sitting idle.
-    * The thread needs to wait for a resource to become available or process data before building the response. For example, an application may need to query a database or access data from a remote web service before generating the response.
-    * The thread needs to wait for an event before generating the response. For example, an application may have to wait for a JMS message, new information from another client, or new data available in a queue before generating the response.
-* Asynchronous processing refers to assigning these blocking operations to a new thread and retuning the thread associated with the request immediately to the container
-
-* although most of the processing has nothing to do with the servlet request or response
-* This can leads to Thread Starvation – Since our servlet thread is blocked until all the processing is done, if server gets a lot of requests to process, it will hit the maximum servlet thread limit and further requests will get Connection Refused errors.
-
-* In short, an asynchronous servlet enables an application to process incoming requests in an asynchronous fashion: A given HTTP worker thread handles an incoming request and then passes the request to another background thread which in turn will be responsible for processing the request and send the response back to the client. The initial HTTP worker thread will return to the HTTP thread pool as soon as it passes the request to the background thread, so it becomes available to process another request.
-* This approach by itself may solve the problem of HTTP thread pool exhaustion, but will not solve the problem of system resources consumption.
-* After all, another background thread was created for processing the request, so the number of simultaneous active threads will not decrease and the system resource consumption will not be improved
-* container's HTTP thread pool size to 2
-* As one may expect, as soon as we fire a considerable number of requests against the servlet endpoint we will leave the container completely unresponsive
-* The two existing HTTP threads will block in Thread.sleep() for each incoming request and will only proceed to the next one after that period of time has gone through
-*  The result is that this time our server will not become unresponsive when we fire a considerable number of requests against the servlet endpoint. The 2 existing HTTP worker threads will handle the requests and spawn a background thread that will continue to process the requests. The HTTP threads will immediately return to the HTTP thread pool and handle the next request in the same asynchronous fashion
-* We have solved the problem of the HTTP thread pool exhaustion, but the number of required threads to handle the requests has not improved: we are just spawning background threads to handle the requests
-* In terms of simultaneous running thread count this should be equivalent to simply increase the HTTP thread pool size: under heavy load the system will not scale
-
-* With synchronous servlets, a thread handling the client HTTP request would be tied up for the entire duration of time it takes to process the request
-    * For long running tasks, where the server primarily waits around for a response (from somewhere else), this leads to thread starvation, under heavy load
-    * This is due to the fact that even though the server isn’t doing anything but waiting around, the threads are being consumed by lots of requests as they come in (and threads are a finite resource)
-    * Asynchronous servlets solve this problem by letting this thread that was engaged to handle the request go back to a pool, while the long running task is executing in some other thread
-    * Once the task has completed and results are ready, then the servlet container has to be notified that the results are ready, and then another thread will be allocated to handle sending this result back to the client
-    * Now, when this happens, the client is still connected to the server and is still waiting
