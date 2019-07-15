@@ -134,6 +134,7 @@ dropped and it must arrive on the client side in the same order in which the ser
     * Asynchronous servlets solve this problem by letting this thread that was engaged to handle the request go back to a pool, while the long running task is executing in some other thread
     * Once the task has completed and results are ready, then the servlet container has to be notified that the results are ready, and then another thread will be allocated to handle sending this result back to the client
     * Now, when this happens, the client is still connected to the server and is still waiting
+
 # conclusions in a nutshell
 * `Socket` - client side of the connection
 * `ServerSocket` - server side of the connection
