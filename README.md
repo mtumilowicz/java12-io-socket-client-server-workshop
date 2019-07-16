@@ -160,13 +160,14 @@ threads will not decrease and the system resource consumption will not be improv
 # conclusions in a nutshell
 * `Socket` - client side of the connection
 * `ServerSocket` - server side of the connection
-* closing socket will close its streams
+* closing `Socket` will close its streams
     ```
     * <p> Closing this socket will also close the socket's
     * {@link java.io.InputStream InputStream} and
     * {@link java.io.OutputStream OutputStream}.
     public synchronized void close() throws IOException
     ```
+* closing `ServerSocket` will not close its streams
 * `ServerSocket` is a `java.net` class that provides a system-independent implementation of the server side of a 
 client/server socket connection
     * useful constructors
@@ -180,7 +181,7 @@ client/server socket connection
             this(port, backlog, null);
         }
         ```
-        * backlog (the default is 50) requested maxim
+        * backlog (the default is 50) requested maximum length of the queue of incoming connections
             * note that HTTP/1.1 uses persistent connections by default and until the client
           disconnects we keep the TCP/IP connection open - blocking any new clients
     * `serverSocket.accept()`
@@ -192,7 +193,7 @@ disconnects (no thread warm up for every client)
     * tomcat: The standard executor internally uses a `java.util.concurrent.ThreadPoolExecutor`
         * http://tomcat.apache.org/tomcat-9.0-doc/config/executor.html
 * this is pretty much how servlet containers like Tomcat work, managing 200 threads in a pool
-  by default. 
+  by default
   * note that Tomcat has the so-called NIO connector that handles some of the operations
     on sockets asynchronously, but the real work in servlets and frameworks built
     on top of them is still blocking
