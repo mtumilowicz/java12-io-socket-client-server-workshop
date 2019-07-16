@@ -6,8 +6,8 @@ plugins {
 group 'java12-io-socket-client-server-workshop'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 12
-targetCompatibility = 12
+sourceCompatibility = 11
+targetCompatibility = 11
 
 test {
     exclude '**/workshop*'
