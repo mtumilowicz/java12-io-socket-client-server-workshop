@@ -11,6 +11,7 @@ targetCompatibility = 12
 
 test {
     exclude '**/workshop*'
+    exclude '**/answers/Answers*'
 }
 
 repositories {
