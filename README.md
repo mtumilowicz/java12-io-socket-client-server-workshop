@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mtumilowicz/java12-io-socket-client-server-workshop.svg?branch=master)](https://travis-ci.com/mtumilowicz/java12-io-socket-client-server-workshop)
+
 # java12-io-socket-client-server-workshop
 
 _Reference_: https://www.amazon.com/Reactive-Programming-RxJava-Asynchronous-Applications/dp/1491931655  
