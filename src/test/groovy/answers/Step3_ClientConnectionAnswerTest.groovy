@@ -19,6 +19,6 @@ class Step3_ClientConnectionAnswerTest extends Specification {
         new Step3_ClientConnectionAnswer(socket).run()
 
         then:
-        outputStream.toString() == "What's your name?\r\nHello, Michal\r\n"
+        outputStream.toString().contains('Hello, Michal')
     }
 }
