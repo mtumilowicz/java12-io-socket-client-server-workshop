@@ -6,8 +6,8 @@ plugins {
 group 'java12-io-socket-client-server-workshop'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 12
+targetCompatibility = 12
 
 test {
     exclude '**/workshop*'
@@ -19,6 +19,6 @@ repositories {
 
 dependencies {
     compile group: 'net.bytebuddy', name: 'byte-buddy', version: '1.9.13'
-    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.3'
-    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.4'
+    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.7'
+    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.5'
 }
