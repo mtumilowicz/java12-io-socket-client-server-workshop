@@ -30,17 +30,16 @@ dropped and it must arrive on the client side in the same order in which the ser
 * server just waits, listening to the socket for a client to make a connection request
 * webSockets and regular sockets are not the same thing
     * a webSocket runs over a regular socket
-    * the biggest difference is that ALL webSocket connections start with an HTTP request from client to server
-    * the fact that a webSocket connection starts with an HTTP connection is critically important because if you can 
-    reach the web server for normal web communication, then you can reach it for a webSocket request without any 
-    networking infrastructure anywhere between client and server having to open new holes in the firewall or open new 
-    ports or anything like that
+    * webSocket connections start with an HTTP request from client to server
+        * it is critically important because if you can reach the web server for normal web communication, 
+        then you can reach it for a webSocket request without any networking infrastructure anywhere between 
+        client and server having to open new holes in the firewall or open new ports or anything like that
     
 ## concerning threads
 * on 64 bit JVM 1.8 thread consumes 1,024 KB of RAM by default (-Xss flag)
     * 1000 concurrent connections mean 1,000 threads and about 1 GB of stack space
     * stack space is independent from heap space - application will consume far more than this a gigabyte
-* a thread pool has many advantages over simply creating threads on demand:
+* a thread pool has many advantages over simply creating threads on demand
     * thread is already initialized and started, therefore you do not have to wait or
     warm up, reducing client latency
     * we put a limit on the total number of threads running in our system so
@@ -50,31 +49,24 @@ dropped and it must arrive on the client side in the same order in which the ser
     * if both the pool and queue are saturated, there is also a configurable rejection
     policy (error, running in client thread instead, etc.)
 * servlet 3.0 specification made it possible to write asynchronous servlets
-    * the idea is to decouple the processing request from the container
-    thread
+    * decouples the processing request from the container thread
+    * most of the processing has nothing to do with the servlet request or response
     * whenever the application wants to send the response, it can do it from any
     thread at any point in time
-    * the original container thread that picked up the request might be already gone or it might be 
+    * the thread that picked up the request might be already gone or it might be 
     handling some other request
-    * we just shifted the problem of thread explosion into a different place
+    * just shift the problem of thread explosion into a different place
     * application could begin responding slowly due to frequent garbage collection cycles and
     context switching
-    * there are two common scenarios in which a thread associated with a request can be sitting idle
+* there are two common scenarios in which a thread associated with a request can be sitting idle
     * the thread needs to wait for a resource to become available or process data before building the 
-    response - for example - an application may need to query a database or access data from a remote web 
+    response, for example an application may need to query a database or access data from a remote web 
     service before generating the response
-    * the thread needs to wait for an event before generating the response - for example - an application 
+    * the thread needs to wait for an event before generating the response, for example an application 
     may have to wait for a JMS message, new information from another client, or new data available in a 
-    queue before generating the response.
-    * asynchronous processing refers to assigning these blocking operations to a new thread and retuning 
+    queue before generating the response
+    * asynchronous processing refers to assigning these blocking operations to a new thread and returning 
     the thread associated with the request immediately to the container
-    * although most of the processing has nothing to do with the servlet request or response
-    * this can leads to Thread Starvation – since our servlet thread is blocked until all the processing is done, 
-    if server gets a lot of requests to process, it will hit the maximum servlet thread limit and further requests 
-    will get Connection Refused errors
-* example:
-    * tomcat: 100 thread for processing requests + 100 container threads (business logic)
-    * netty: 4 threads in event loop + 100 container threads (business logic)
     
 ## http 1.1 and persistent connections
 * in HTTP 1.0, a connection between a Web client and server is closed after a single request/response cycle
