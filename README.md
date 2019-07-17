@@ -27,28 +27,7 @@ application
 dropped and it must arrive on the client side in the same order in which the server sent it)
 * client and server bind a socket to its end of the connection
 * to communicate, the client and the server each reads from and writes to the socket bound to the connection
-* server runs on a specific computer and has a socket that is bound to a specific port number
 * server just waits, listening to the socket for a client to make a connection request
-* an endpoint is a combination of an IP address and a port number
-    * every TCP connection can be uniquely identified by its two endpoints
-    * that way you can have multiple connections between your host and the server
-* client-side
-    * client knows the hostname of the machine on which the server is running and the port number on which the 
-    server is listening
-    * the client also needs to identify itself to the server so it binds to a local port number that it will use 
-    during this connection (this is usually assigned by the system)
-    ```
-    Accepted connection from Socket[addr=/127.0.0.1,port=52453,localport=1]
-    Accepted connection from Socket[addr=/127.0.0.1,port=52454,localport=1]
-    ```
-    * if the connection is accepted, a socket is successfully created and the client can use the socket to 
-    communicate with the server
-* server-side
-    * if everything goes well, the server accepts the connection
-    * the server gets a new socket bound to the same local port and also has its remote endpoint set to the address 
-    and port of the client
-    * it needs a new socket so that it can continue to listen to the original socket for connection requests while 
-    tending to the needs of the connected client
 * webSockets and regular sockets are not the same thing
     * a webSocket runs over a regular socket
     * the biggest difference is that ALL webSocket connections start with an HTTP request from client to server
