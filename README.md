@@ -90,7 +90,6 @@ have adopted
     * {@link java.io.OutputStream OutputStream}.
     public synchronized void close() throws IOException
     ```
-* closing `ServerSocket` will not close its streams
 * `ServerSocket` is a `java.net` class that provides a system-independent implementation of the server side of a 
 client/server socket connection
     * useful constructors
@@ -111,8 +110,7 @@ client/server socket connection
       * waits until a client starts up and requests a connection on the host and port of this server
       * returns a new `Socket` which is bound to the same local port and has its remote address 
       and remote port set to that of the client when a connection is successfully established 
-* `Step9_ThreadPoolServerAnswer` - uses a thread per connection, but threads are recycled when a client 
-disconnects (no thread warm up for every client)
+* `Step9_ThreadPoolServerAnswer`
     * tomcat: The standard executor internally uses a `java.util.concurrent.ThreadPoolExecutor`
         * http://tomcat.apache.org/tomcat-9.0-doc/config/executor.html
 * this is pretty much how servlet containers like Tomcat work, managing 200 threads in a pool
