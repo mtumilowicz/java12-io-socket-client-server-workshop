@@ -18,8 +18,10 @@ class Step3_ClientConnectionWorkshopTest extends Specification {
 
         when:
         new Step3_ClientConnectionWorkshop(socket).run()
+        def out = outputStream.toString()
 
         then:
-        outputStream.toString() == "What's your name?\r\nHello, Michal\r\n"
+        out.contains("What's your name?")
+        out.contains('Hello, Michal')
     }
 }
