@@ -1,12 +1,11 @@
 package workshop;
 
-/**
- * Created by mtumilowicz on 2019-07-07.
- */
-
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Created by mtumilowicz on 2019-07-07.
+ */
 /**
  * encapsulate common code from {@link Step1_SingleThreadedServerWorkshop}, {@link Step2_ThreadPerConnectionServerWorkshop}
  * 
