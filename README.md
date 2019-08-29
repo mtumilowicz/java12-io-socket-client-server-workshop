@@ -17,7 +17,7 @@ _Reference_: https://developerlife.com/2011/04/13/creating-asynchronous-servlets
     * single threaded server
     * thread per connection server
     * thread pool server
-* on the workshop we will try to fix failing tests from `test/workshop` package by following steps and hints in
+* in the workshop we will try to fix failing tests from `test/workshop` package by following steps and hints in
 `java/workshop` package
 * answers: `java/answers` package
 
